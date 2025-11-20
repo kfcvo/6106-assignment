@@ -6,11 +6,15 @@ app = Flask(__name__)
 def index():
      return(render_template("index.html"))
 
-@app.route("/",methods=["GET", "POST"])
+@app.route("/main",methods=["GET", "POST"])
 def main():
      q = request.form.get("q")
      print(q)
      return(render_template("main.html"))
+
+@app.route("/paynow",methods=["GET", "POST"])
+def paynow():
+     return(render_template("paynow.html"))
 
 if __name__ == "__main__":
      app.run()
