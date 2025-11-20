@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
+    <title>6101 czy</title>
+</head>
+<body>
+    <div class="container">
+      <h2>Transfer</h2>
+     <input type="text" id="payer" placeholder="payer address">
+     <input type="text" id="payee" placeholder="payee address">
+     <input type="number" id="amount" placeholder="amount">
+
+     
+      <form action="/main" method="post">  
+         <input type="submit" value="main">
+      </form>
+    </div>
+</body>
+</html>
