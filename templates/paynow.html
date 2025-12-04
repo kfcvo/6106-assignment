@@ -13,7 +13,7 @@
      <input type="text" id="payee" placeholder="payee Address">
      <input type="number" id="amount" placeholder="Amount">
     <button class="btn" onclick="transfer()">Transfer Money</button>
-	<button class="btn" onclick="view_transaction()">view Transaction</button>
+	<button class="btn" onclick="check_transaction()">view Transaction</button>
       <form action="/main" method="post">  
          <input type="submit" value="main">
       </form>
@@ -85,7 +85,7 @@
       await contract.methods.transfer_money(payer, payee,amount).send({ from: accounts[0]});
     }
 	async function check_transaction() {
-      result = await contract.methods.transfer_view().call();
+      result = await contract.methods.check_transaction().call();
       document.getElementById('view_payer').innerText = "Payer: " + result[0];
       document.getElementById('view_payee').innerText = "Payee: " + result[1];
       document.getElementById('view_amount').innerText = "Amount: " + result[2];
