@@ -4,72 +4,231 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
-    <title>6101 czy</title>
+    <title>6101 Transfer</title>
+    <style>
+        /* 页面基础背景 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* 卡片容器 */
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px; /*稍微宽一点以容纳地址*/
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        /* 输入框样式 */
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        input[type="text"], 
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 0; /* 重置默认边距 */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box; /* 确保padding不撑大宽度 */
+            font-size: 14px;
+            transition: border-color 0.3s;
+            background-color: #fafafa;
+        }
+
+        /* 地址输入框使用等宽字体，看起来更像代码/Hash */
+        input[type="text"] {
+            font-family: 'Consolas', 'Monaco', monospace; 
+            font-size: 13px;
+        }
+
+        input:focus {
+            border-color: #4a90e2;
+            outline: none;
+            background-color: #fff;
+        }
+
+        /* 按钮通用样式 */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        /* 主要操作按钮：转账 */
+        .btn-primary {
+            background-color: #4a90e2; /* 蓝色 */
+            color: white;
+            box-shadow: 0 4px 6px rgba(74, 144, 226, 0.3);
+        }
+        .btn-primary:hover {
+            background-color: #357abd;
+            transform: translateY(-2px);
+        }
+
+        /* 次要操作按钮：查询 */
+        .btn-secondary {
+            background-color: #1dd1a1; /* 绿色 */
+            color: white;
+            box-shadow: 0 4px 6px rgba(29, 209, 161, 0.3);
+        }
+        .btn-secondary:hover {
+            background-color: #10ac84;
+            transform: translateY(-2px);
+        }
+
+        /* 返回按钮 */
+        .btn-back {
+            background-color: transparent;
+            color: #888;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        .btn-back:hover {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        /* 结果显示区域样式 */
+        .transaction-result {
+            margin-top: 25px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #4a90e2; /* 左侧加个蓝条 */
+            text-align: left;
+        }
+
+        .transaction-result p {
+            margin: 8px 0;
+            font-size: 13px;
+            color: #555;
+            word-break: break-all; /* 防止地址太长撑破容器 */
+            font-family: monospace; /* 结果也用等宽字体 */
+        }
+        
+        .divider {
+            height: 1px;
+            background: #eee;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-      <h2>Transfer</h2>
-     <input type="text" id="payer" placeholder="payer Address">
-     <input type="text" id="payee" placeholder="payee Address">
-     <input type="number" id="amount" placeholder="Amount">
-    <button class="btn" onclick="transfer()">Transfer Money</button>
-	<button class="btn" onclick="check_transaction()">view Transaction</button>
-      <form action="/main" method="post">  
-         <input type="submit" value="main">
+      <h2>💸 Transfer Money</h2>
+      
+      <div class="form-group">
+          <label for="payer">From (Payer Address)</label>
+          <input type="text" id="payer" placeholder="0x...">
+      </div>
+      
+      <div class="form-group">
+          <label for="payee">To (Payee Address)</label>
+          <input type="text" id="payee" placeholder="0x...">
+      </div>
+
+      <div class="form-group">
+          <label for="amount">Amount</label>
+          <input type="number" id="amount" placeholder="0">
+      </div>
+
+      <button class="btn btn-primary" onclick="transfer()">Confirm Transfer</button>
+      <button class="btn btn-secondary" onclick="check_transaction()">View Last Transaction</button>
+      
+      <div class="transaction-result">
+          <p id="view_payer">Payer: Waiting...</p>
+          <p id="view_payee">Payee: Waiting...</p>
+          <p id="view_amount">Amount: Waiting...</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <form action="/main" method="post" style="margin:0;">  
+         <button type="submit" class="btn btn-back">← Back to Main</button>
       </form>
-	  <p id="view_payer"></p>
-	  <p id="view_payee"></p>
-	  <p id="view_amount"></p>
+
       <script src= "https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
       <script> 
       const contractAddress ="0xAaA94E5c4A283B5f9D4689fac6C5042D4CB2dEe5";
       const contractABI = [
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "payer_input",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "payee_input",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount_input",
-				"type": "uint256"
-			}
-		],
-		"name": "transfer_money",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "check_transaction",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	}
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "payer_input",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "payee_input",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amount_input",
+                "type": "uint256"
+            }
+        ],
+        "name": "transfer_money",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "check_transaction",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
 ];
       const web3 = new Web3(Web3.givenProvider);
       const contract = new web3.eth.Contract(contractABI,contractAddress);
@@ -84,8 +243,9 @@
 
       await contract.methods.transfer_money(payer, payee,amount).send({ from: accounts[0]});
     }
-	async function check_transaction() {
+    async function check_transaction() {
       result = await contract.methods.check_transaction().call();
+      // 我修改了这里的一点点显示逻辑，让默认状态好看点，或者你可以保留原来的逻辑
       document.getElementById('view_payer').innerText = "Payer: " + result[0];
       document.getElementById('view_payee').innerText = "Payee: " + result[1];
       document.getElementById('view_amount').innerText = "Amount: " + result[2];

@@ -3,27 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
-    <title>6101 czy</title>
+  
+    <title>Banking Dashboard</title>
+    <style>
+        /* 重置默认样式 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex; /* 关键：开启Flex布局 */
+            height: 100vh; /* 占满整个屏幕高度 */
+            overflow: hidden; /* 防止出现双滚动条 */
+        }
+
+        /* --- 左侧侧边栏样式 --- */
+        .sidebar {
+            width: 260px; /* 侧边栏宽度 */
+            background-color: #0b457f; /* 深蓝灰色背景 */
+            color: white;
+            display: flex;
+            flex-direction: column; /* 垂直排列 */
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            text-align: center;
+            padding: 20px 0 40px 0;
+            border-bottom: 1px solid #34495e;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* 侧边栏按钮样式 */
+        .sidebar form {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .sidebar button {
+            width: 100%;
+            background: transparent; /* 透明背景 */
+            border: none;
+            color: #ecf0f1;
+            padding: 15px 20px;
+            text-align: left; /* 文字左对齐 */
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar button:hover {
+            background-color: #34495e; /* 鼠标悬停变亮一点 */
+            transform: translateX(5px); /* 稍微右移一点动效 */
+        }
+
+        .icon {
+            margin-right: 15px;
+            font-size: 18px;
+        }
+
+        /* 登出按钮特殊处理：推到底部 */
+        .logout-section {
+            margin-top: auto; /* 自动把这部分推到最下面 */
+            border-top: 1px solid #34495e;
+            padding-top: 20px;
+        }
+
+        .btn-logout {
+            color: #e74c3c !important; /* 红色文字 */
+        }
+        .btn-logout:hover {
+            background-color: rgba(231, 76, 60, 0.1) !important;
+        }
+
+        /* --- 右侧主内容区域样式 --- */
+        .main-content {
+            flex: 1; /* 占据剩余所有空间 */
+            background-color: #f4f7f6;
+            padding: 50px;
+            overflow-y: auto; /* 内容多了可以滚动 */
+        }
+
+        .welcome-card {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            max-width: 800px;
+            margin: 0 auto; /* 居中 */
+        }
+
+        .welcome-header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 20px;
+        }
+
+        .welcome-header h1 {
+            color: #2c3e50;
+            font-size: 32px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #4a90e2;
+        }
+        
+        .info-item h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .info-item p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-      <h2>main</h2>
-      <form action="/paynow" method="post">         
-         <input type="submit" value="Transfer Money">
-      </form>
-      <form action="/deposit" method="post">         
-         <input type="submit" value="Deposit Money">
-      </form>
-      <form action="/userlog" method="post">         
-         <input type="submit" value="User Log">
-      </form>
-      <form action="/deleteuserlog" method="post">         
-         <input type="submit" value="Delete User Log">
-      </form>
-      <form action="/" method="post">     
-         <input type="submit" value="Logout">
-      </form>
-    </div>
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>🏦 BANK SYS</h2>
+        </div>
+
+        <form action="/paynow" method="post">         
+            <button type="submit"><span class="icon">💸</span> Transfer</button>
+        </form>
+
+        <form action="/deposit" method="post">         
+            <button type="submit"><span class="icon">💰</span> Deposit</button>
+        </form>
+
+        <form action="/userlog" method="post">         
+            <button type="submit"><span class="icon">📝</span> View Logs</button>
+        </form>
+
+        <form action="/deleteuserlog" method="post">         
+            <button type="submit"><span class="icon">🗑️</span> Clear Logs</button>
+        </form>
+
+        <div class="logout-section">
+            <form action="/" method="post">     
+                <button type="submit" class="btn-logout"><span class="icon"></span> Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="welcome-card">
+            <div class="welcome-header">
+                <h1>Welcome Back!</h1>
+                <p style="color: #7f8c8d; margin-top: 10px;">Secure Banking Management System v1.0</p>
+            </div>
+
+            <p style="font-size: 16px; color: #555; line-height: 1.6;">
+                Welcome to the 6101 Banking System. Use the sidebar on the left to navigate through the application features.
+                Select an option below to get started.
+            </p>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <h3>💸 Transfer Money</h3>
+                    <p>Send funds securely to other accounts using blockchain addresses.</p>
+                </div>
+                <div class="info-item" style="border-left-color: #2ecc71;">
+                    <h3>💰 Deposit Funds</h3>
+                    <p>Add funds to customer accounts instantly and verify transactions.</p>
+                </div>
+                <div class="info-item" style="border-left-color: #9b59b6;">
+                    <h3>📝 System Logs</h3>
+                    <p>Audit user activities and track login history for security purposes.</p>
+                </div>
+                <div class="info-item" style="border-left-color: #e74c3c;">
+                    <h3>🛡️ Admin Tools</h3>
+                    <p>Clear system logs and manage database maintenance tasks.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
 </body>
 </html>
