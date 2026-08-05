@@ -6,7 +6,7 @@
 
 ## Overview
 
-**ChainBank** is a full-stack blockchain banking application built as an academic assignment (course 6106). It combines a traditional Flask web server with Ethereum smart contracts, allowing users to log in, navigate a banking dashboard, and perform real on-chain transactions — including money transfers and deposits — through their browser wallet (e.g. MetaMask).
+**ChainBank** is a full-stack blockchain banking application. It combines a traditional Flask web server with Ethereum smart contracts, allowing users to log in, navigate a banking dashboard, and perform real on-chain transactions — including money transfers and deposits — through their browser wallet (e.g. MetaMask).
 
 The system also maintains an off-chain audit log in SQLite, recording every user login with a timestamp for security tracking.
 
